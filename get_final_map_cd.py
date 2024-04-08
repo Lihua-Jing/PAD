@@ -7,15 +7,15 @@ import glob
 import os
 
 from heatmap_MI import img_heatmap_mi
-from ghost import img_heatmap_ghost
+from heatmap_CD import img_heatmap_cd
 from fuse_filter import fuse_heatmap, heatmap_filter
 
-ratio_mi = 0.5 # ratio_ghost = 1-ratio_mi
+ratio_mi = 0.5 # ratio_cd = 1-ratio_mi
 kernel_pram = 80
 thresh_pram = 80 # percentile, from small to big
 # input_path = "/home/dell/jlh/ultralytics/ultralytics/datasets/inria/images/inria_P5/"
 input_path = "/home/dell/jlh/patch_attack/APRICOT/"
-savefig_path = "/home/dell/jlh/my_patch_defense/code/apricot_final_map_ghost/"
+savefig_path = "/home/dell/jlh/my_patch_defense/code/apricot_final_map_cd/"
 
 
 if __name__ == "__main__":
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         ori_width, ori_height = ori_img.size
         print("ori_height , ori_width", ori_height, ori_width)
 
-        mi_img, ghost_img, fuse_img = fuse_heatmap(impath, ori_height, ori_width)
+        mi_img, cd_img, fuse_img = fuse_heatmap(impath, ori_height, ori_width)
         # cv2.imshow("fuse_img", fuse_img)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
@@ -39,8 +39,8 @@ if __name__ == "__main__":
         if not os.path.exists(savefig_path):
             os.makedirs(savefig_path)
 
-        threshold = np.percentile(ghost_img, thresh_pram)
-        h_t, h_t_o, h_t_o_c, h_t_o_c_o = heatmap_filter(ghost_img, threshold, ori_height, ori_width)
+        threshold = np.percentile(cd_img, thresh_pram)
+        h_t, h_t_o, h_t_o_c, h_t_o_c_o = heatmap_filter(cd_img, threshold, ori_height, ori_width)
 
         # cv2.imshow("h_t_o_c_o", h_t_o_c_o)
         # cv2.waitKey(0)

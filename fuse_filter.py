@@ -9,9 +9,9 @@ import time
 
 # from heatmap_MI import img_heatmap_mi
 from heatmap_MI import img_heatmap_mi
-from ghost_one import img_heatmap_ghost
+from heatmap_CD import img_heatmap_cd
 
-ratio_mi = 0.5 # ratio_ghost = 1-ratio_mi
+ratio_mi = 0.5 # ratio_cd = 1-ratio_mi
 kernel_pram = 80
 thresh_pram = 80 # percentile, from small to big
 input_path = "/home/dell/jlh/my_patch_defense/code/000/0125/"
@@ -26,21 +26,21 @@ def fuse_heatmap(impath, ori_height, ori_width):
     time_mi_end = time.time()
     print('--------------mi cost %f s' %(time_mi_end-time_start))
 
-    h_ghost, qt = img_heatmap_ghost(impath)
-    h_ghost = np.mean(h_ghost, axis=0)
-    print('h_ghost.shape', h_ghost.shape)
-    time_ghost_end = time.time()
-    print('--------------ghost cost %f s' %(time_ghost_end-time_mi_end))
+    h_cd, qt = img_heatmap_cd(impath)
+    h_cd = np.mean(h_cd, axis=0)
+    print('h_cd.shape', h_cd.shape)
+    time_cd_end = time.time()
+    print('--------------cd cost %f s' %(time_cd_end-time_mi_end))
 
     h_mi = cv2.resize(h_mi, (ori_width, ori_height))
     print('h_mi resize to ori size')
     # plt.imshow(h_mi)
     # plt.title('h_mi_resize')
     # plt.show()
-    h_ghost = cv2.resize(h_ghost, (ori_width, ori_height))
-    print('h_ghost resize to ori size')
-    # plt.imshow(h_ghost)
-    # plt.title('h_ghost_resize')
+    h_cd = cv2.resize(h_cd, (ori_width, ori_height))
+    print('h_cd resize to ori size')
+    # plt.imshow(h_cd)
+    # plt.title('h_cd_resize')
     # plt.show()
 
     h_mi_max = np.max(h_mi)
@@ -49,17 +49,17 @@ def fuse_heatmap(impath, ori_height, ori_width):
     print('h_mi_min:', h_mi_min)
     h_mi = [int((h_mi[i][j]-h_mi_min)*255/(h_mi_max-h_mi_min)) for i in range(len(h_mi)) for j in range(len(h_mi[0]))]
 
-    h_ghost_max = np.max(h_ghost)
-    h_ghost_min = np.min(h_ghost)
-    print('h_ghost_max:', h_ghost_max)
-    print('h_ghost_min:', h_ghost_min)
-    h_ghost = [int((h_ghost[i][j]-h_ghost_min)*255/(h_ghost_max-h_ghost_min)) for i in range(len(h_ghost)) for j in range(len(h_ghost[0]))]
+    h_cd_max = np.max(h_cd)
+    h_cd_min = np.min(h_cd)
+    print('h_cd_max:', h_cd_max)
+    print('h_cd_min:', h_cd_min)
+    h_cd = [int((h_cd[i][j]-h_cd_min)*255/(h_cd_max-h_cd_min)) for i in range(len(h_cd)) for j in range(len(h_cd[0]))]
 
-    h_fuse = [int(h_mi[i]*ratio_mi + h_ghost[i]*(1-ratio_mi)) for i in range(len(h_mi))]
+    h_fuse = [int(h_mi[i]*ratio_mi + h_cd[i]*(1-ratio_mi)) for i in range(len(h_mi))]
     print('len(h_fuse)', len(h_fuse))
 
     time_fuse_end = time.time()
-    print('--------------fuse cost %f s' %(time_fuse_end-time_ghost_end))
+    print('--------------fuse cost %f s' %(time_fuse_end-time_cd_end))
 
 
     h_fuse_flatNumpyArray = np.array(h_fuse,dtype=np.uint8)
@@ -68,10 +68,10 @@ def fuse_heatmap(impath, ori_height, ori_width):
     h_mi_flatNumpyArray = np.array(h_mi,dtype=np.uint8)
     h_mi_grayImage = h_mi_flatNumpyArray.reshape(ori_height, ori_width)
 
-    h_ghost_flatNumpyArray = np.array(h_ghost,dtype=np.uint8)
-    h_ghost_grayImage = h_ghost_flatNumpyArray.reshape(ori_height, ori_width)
+    h_cd_flatNumpyArray = np.array(h_cd,dtype=np.uint8)
+    h_cd_grayImage = h_cd_flatNumpyArray.reshape(ori_height, ori_width)
 
-    return h_mi_grayImage, h_ghost_grayImage, h_fuse_grayImage
+    return h_mi_grayImage, h_cd_grayImage, h_fuse_grayImage
 
 def heatmap_filter(heatmap, threshold, height, width):
     # thresh
@@ -119,7 +119,7 @@ if __name__ == "__main__":
         ori_width, ori_height = ori_img.size
         print("ori_height , ori_width", ori_height, ori_width)
 
-        mi_img, ghost_img, fuse_img = fuse_heatmap(impath, ori_height, ori_width)
+        mi_img, cd_img, fuse_img = fuse_heatmap(impath, ori_height, ori_width)
         # cv2.imshow("fuse_img", fuse_img)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
@@ -138,8 +138,8 @@ if __name__ == "__main__":
         # plt.imshow(mi_img, cmap=plt.cm.jet)
         # plt.title('mi_heatmap')
         # plt.subplot(243)
-        # plt.imshow(ghost_img, cmap=plt.cm.jet)
-        # plt.title('ghost_heatmap')
+        # plt.imshow(cd_img, cmap=plt.cm.jet)
+        # plt.title('cd_heatmap')
         # plt.subplot(244)
         # plt.imshow(fuse_img, cmap=plt.cm.jet)
         # plt.title('fuse_heatmap')
@@ -165,9 +165,9 @@ if __name__ == "__main__":
         # plt.imshow(mi_img)
         plt.title('mi_heatmap')
         plt.savefig(savefig_path+name+"mi_heatmap.png")
-        plt.imshow(ghost_img, cmap=plt.cm.jet)
-        plt.title('ghost_heatmap')
-        plt.savefig(savefig_path+name+"ghost_heatmap.png")
+        plt.imshow(cd_img, cmap=plt.cm.jet)
+        plt.title('cd_heatmap')
+        plt.savefig(savefig_path+name+"cd_heatmap.png")
         plt.imshow(fuse_img, cmap=plt.cm.jet)
         plt.title('fuse_heatmap')
         plt.savefig(savefig_path+name+"fuse_heatmap.png")

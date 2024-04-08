@@ -7,10 +7,10 @@ import glob
 import os
 
 from heatmap_MI import img_heatmap_mi
-from ghost import img_heatmap_ghost
+from heatmap_CD import img_heatmap_cd
 from fuse_filter import fuse_heatmap, heatmap_filter
 
-ratio_mi = 0.5 # ratio_ghost = 1-ratio_mi
+ratio_mi = 0.5 # ratio_cd = 1-ratio_mi
 kernel_pram = 80
 thresh_pram = 80 # percentile, from small to big
 input_path = "/home/dell/jlh/ultralytics/ultralytics/datasets/cocoperson/images/cocoperson-tsea/"
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         ori_width, ori_height = ori_img.size
         print("ori_height , ori_width", ori_height, ori_width)
 
-        mi_img, ghost_img, fuse_img = fuse_heatmap(impath, ori_height, ori_width)
+        mi_img, cd_img, fuse_img = fuse_heatmap(impath, ori_height, ori_width)
         # cv2.imshow("fuse_img", fuse_img)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()

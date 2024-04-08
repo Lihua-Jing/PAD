@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 savefig_path = "/home/dell/jlh/my_patch_defense/code/0double_jpeg/000/"
 
-def ghost(imorig, checkDisplacements):
+def recompress_diff(imorig, checkDisplacements):
     minQ = 51
     maxQ = 100
     stepQ = 1
@@ -93,11 +93,11 @@ def clean_up_image(filename):
 
     return im_out
 
-def img_heatmap_ghost(impath):
+def img_heatmap_cd(impath):
     im = clean_up_image(impath)
     checkDisplacements = 0
     # smoothFactor = 1
-    OutputX, OutputY, dispImages, imin, Qualities, Mins = ghost(im, checkDisplacements)
+    OutputX, OutputY, dispImages, imin, Qualities, Mins = recompress_diff(im, checkDisplacements)
     OutputMap = dispImages
 
     return OutputMap, OutputX
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         name = data_file.split(".")[0]
         impath = data_dir + data_file
 
-        OutputMap, OutputX = img_heatmap_ghost(impath)
+        OutputMap, OutputX = img_heatmap_cd(impath)
         print(len(OutputMap))
 
         # for ii in range(len(OutputMap)):
