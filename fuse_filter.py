@@ -24,13 +24,13 @@ def fuse_heatmap(impath, ori_height, ori_width):
     h_mi = img_heatmap_mi(impath)
     print('h_mi.shape', h_mi.shape)
     time_mi_end = time.time()
-    print('--------------mi cost %f s' %(time_mi_end-time_start))
+    # print('--------------mi cost %f s' %(time_mi_end-time_start))
 
     h_cd, qt = img_heatmap_cd(impath)
     h_cd = np.mean(h_cd, axis=0)
     print('h_cd.shape', h_cd.shape)
     time_cd_end = time.time()
-    print('--------------cd cost %f s' %(time_cd_end-time_mi_end))
+    # print('--------------cd cost %f s' %(time_cd_end-time_mi_end))
 
     h_mi = cv2.resize(h_mi, (ori_width, ori_height))
     print('h_mi resize to ori size')
@@ -59,7 +59,7 @@ def fuse_heatmap(impath, ori_height, ori_width):
     print('len(h_fuse)', len(h_fuse))
 
     time_fuse_end = time.time()
-    print('--------------fuse cost %f s' %(time_fuse_end-time_cd_end))
+    # print('--------------fuse cost %f s' %(time_fuse_end-time_cd_end))
 
 
     h_fuse_flatNumpyArray = np.array(h_fuse,dtype=np.uint8)
