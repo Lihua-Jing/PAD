@@ -13,9 +13,9 @@ from fuse_filter import fuse_heatmap, heatmap_filter
 ratio_mi = 0.5 # ratio_cd = 1-ratio_mi
 kernel_pram = 80
 thresh_pram = 80 # percentile, from small to big
-input_path = "/home/dell/jlh/ultralytics/ultralytics/datasets/inria/images/inria_P1/"
+input_path = "/home/dell/jlh/ultralytics/ultralytics/datasets/inria/images/inria_P6/"
 # input_path = "/home/dell/jlh/patch_attack/APRICOT/"
-savefig_path = "/home/dell/jlh/my_patch_defense/code/P1_final_map0409/"
+savefig_path = "P6_final_map0428/"
 
 
 if __name__ == "__main__":
